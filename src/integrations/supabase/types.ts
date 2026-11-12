@@ -14,7 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      admin_settings: {
+        Row: {
+          id: number
+          password_hash: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          password_hash: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          password_hash?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      daily_stats: {
+        Row: {
+          cancelaciones: number
+          day: string
+          reservas: number
+          updated_at: string
+        }
+        Insert: {
+          cancelaciones?: number
+          day: string
+          reservas?: number
+          updated_at?: string
+        }
+        Update: {
+          cancelaciones?: number
+          day?: string
+          reservas?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
