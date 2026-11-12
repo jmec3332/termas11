@@ -48,8 +48,8 @@ export function usage(db: DB, date: string, excludeId?: string) {
   for (const s of SLOTS) { tinas[s] = 0; saunas[s] = 0; }
   for (const r of db.reservations) {
     if (r.date !== date || r.status !== "confirmada" || r.id === excludeId) continue;
-    if (r.tinaSlot) tinas[r.tinaSlot] += r.tinaUnits;
-    if (r.saunaSlot) saunas[r.saunaSlot] += r.saunaUnits;
+    if (r.tinaSlot) tinas[r.tinaSlot] = (tinas[r.tinaSlot] ?? 0) + r.tinaUnits;
+    if (r.saunaSlot) saunas[r.saunaSlot] = (saunas[r.saunaSlot] ?? 0) + r.saunaUnits;
   }
   return { tinas, saunas };
 }
@@ -86,19 +86,19 @@ export function seedReservations(settings: Settings, now = new Date()): Reservat
     const date = addDays(today, off);
     const n = 2 + Math.floor(rnd() * 6);
     for (let i = 0; i < n; i++) {
-      const pkg = PACKAGES[Math.floor(rnd() * 4)];
+      const pkg = PACKAGES[Math.floor(rnd() * 4)]!;
       const adults = 1 + Math.floor(rnd() * 4);
       const kids = rnd() < 0.2 ? 1 : 0;
       const u = usage(db, date);
       const cap = capacity(settings);
       let tinaSlot: string | null = null, saunaSlot: string | null = null;
-      if (pkg.tina) tinaSlot = SLOTS.find((s, k) => (k + i) % 3 === 0 && u.tinas[s] + adults <= cap.tinas) ?? null;
-      if (pkg.sauna) saunaSlot = SLOTS.find((s) => s !== tinaSlot && u.saunas[s] + saunasNeeded(adults) <= cap.saunas && rnd() < 0.6) ?? null;
+      if (pkg.tina) tinaSlot = SLOTS.find((s, k) => (k + i) % 3 === 0 && (u.tinas[s] ?? 0) + adults <= cap.tinas) ?? null;
+      if (pkg.sauna) saunaSlot = SLOTS.find((s) => s !== tinaSlot && (u.saunas[s] ?? 0) + saunasNeeded(adults) <= cap.saunas && rnd() < 0.6) ?? null;
       if ((pkg.tina && !tinaSlot) || (pkg.sauna && !saunaSlot)) continue;
       const season: Season = [11, 0, 1].includes(new Date(date + "T12:00").getMonth()) ? "alta" : "baja";
       const cancelled = rnd() < 0.12;
       let code = ""; do { code = "TP-" + Math.floor(10000 + rnd() * 89999); } while (codes.has(code)); codes.add(code);
-      const name = NAMES[Math.floor(rnd() * NAMES.length)];
+      const name = NAMES[Math.floor(rnd() * NAMES.length)]!;
       db.reservations.push({
         id: `demo-${date}-${i}`, code, createdAt: addDays(date, -3) + "T10:00:00", date, packageId: pkg.id, adults, kids,
         name, phone: "9" + String(10000000 + Math.floor(rnd() * 89999999)), email: "",

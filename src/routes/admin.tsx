@@ -72,7 +72,7 @@ function Admin() {
                 <div key={x} className="space-y-0.5"><Label className="text-xs capitalize">{x}</Label>
                   <Input type="number" min={0} step={500} value={prices[p.id][x]} onChange={(e) => setPrices({ ...prices, [p.id]: { ...prices[p.id], [x]: Number(e.target.value) } })} /></div>
               ))}
-              <Button onClick={() => { if (Object.values(prices[p.id]).some((v) => !(v >= 0))) return toast.error("Precio no válido"); setS({ prices: { ...s.prices, [p.id]: prices[p.id] } }); toast.success(`Precio de ${p.name} grabado`); }}>Grabar</Button>
+              <Button onClick={() => { if (Object.values(prices[p.id]).some((v) => !(v >= 0))) return toast.error("Precio no válido"); setS({ prices: { ...s.prices, [p.id]: prices[p.id] } }); toast.success(`Precio de ${p.name} grabado`); return undefined; }}>Grabar</Button>
             </div>
           ))}
         </div>
@@ -87,8 +87,8 @@ function Admin() {
           <table className="w-full min-w-[520px] text-center text-sm">
             <thead><tr><th className="p-1 text-left">Recurso</th>{SLOTS.map((t) => <th key={t} className="p-1"><button className={`rounded px-1.5 ${selSlot === t ? "bg-primary text-primary-foreground" : ""}`} onClick={() => setSelSlot(selSlot === t ? null : t)}>{t}</button></th>)}</tr></thead>
             <tbody>
-              <tr><td className="p-1 text-left font-bold text-tina">Tinas</td>{SLOTS.map((t) => <Cell key={t} used={u.tinas[t]} cap={cap.tinas} kind="tina" />)}</tr>
-              <tr><td className="p-1 text-left font-bold">Saunas</td>{SLOTS.map((t) => <Cell key={t} used={u.saunas[t]} cap={cap.saunas} kind="sauna" />)}</tr>
+              <tr><td className="p-1 text-left font-bold text-tina">Tinas</td>{SLOTS.map((t) => <Cell key={t} used={u.tinas[t] ?? 0} cap={cap.tinas} kind="tina" />)}</tr>
+              <tr><td className="p-1 text-left font-bold">Saunas</td>{SLOTS.map((t) => <Cell key={t} used={u.saunas[t] ?? 0} cap={cap.saunas} kind="sauna" />)}</tr>
             </tbody>
           </table>
         </div>
@@ -113,7 +113,7 @@ function Admin() {
         <Box title="Cambiar clave de acceso">
           <p className="mb-2 text-sm text-muted-foreground">Sirve para Administración y Gráficos.</p>
           <div className="flex gap-2"><Input type="password" placeholder="Nueva clave" value={pw} onChange={(e) => setPw(e.target.value)} />
-            <Button onClick={() => { if (pw.length < 4) return toast.error("Mínimo 4 caracteres"); setS({ password: pw }); setPw(""); toast.success("Clave grabada"); }}>Grabar</Button></div>
+            <Button onClick={() => { if (pw.length < 4) return toast.error("Mínimo 4 caracteres"); setS({ password: pw }); setPw(""); toast.success("Clave grabada"); return undefined; }}>Grabar</Button></div>
         </Box>
         <Box title="Datos de ejemplo">
           <p className="mb-2 text-sm text-muted-foreground">{demoCount} reservas de ejemplo cargadas.</p>

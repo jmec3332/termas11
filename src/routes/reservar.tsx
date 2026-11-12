@@ -61,8 +61,8 @@ function Reservar() {
     if (!isValidPhone(phone)) return toast.error("El celular debe tener 9 dígitos y empezar en 9 (ej: 9 1234 5678)");
     if (!pkg) return;
     const fresh = usage(db, date);
-    if (tina && fresh.tinas[tina] + tinasNeeded(adults) > cap.tinas) return toast.error("Ese horario de tina se acaba de llenar");
-    if (sauna && fresh.saunas[sauna] + saunasNeeded(adults) > cap.saunas) return toast.error("Ese horario de sauna se acaba de llenar");
+    if (tina && (fresh.tinas[tina] ?? 0) + tinasNeeded(adults) > cap.tinas) return toast.error("Ese horario de tina se acaba de llenar");
+    if (sauna && (fresh.saunas[sauna] ?? 0) + saunasNeeded(adults) > cap.saunas) return toast.error("Ese horario de sauna se acaba de llenar");
     const r: Reservation = {
       id: crypto.randomUUID(), code: genCode(new Set(db.reservations.map((x) => x.code))), createdAt: new Date().toISOString(), date, packageId: pkg.id,
       adults, kids, name: name.trim(), phone: normalizePhone(phone), email: email.trim(), tinaSlot: tina, saunaSlot: sauna,
@@ -71,6 +71,7 @@ function Reservar() {
     update((d) => ({ ...d, reservations: [...d.reservations, r] }));
     setDone(r);
     window.scrollTo(0, 0);
+    return undefined;
   };
 
   const canNext = [!!pkg, adults >= 1 && !!date, (!pkg?.tina || !!tina) && (!pkg?.sauna || !!sauna), true][step];
@@ -163,7 +164,7 @@ function SlotPicker({ kind, title, need, used, cap, value, onChange, blocked, pa
       <h2 className={`mb-2 inline-block rounded px-2 py-0.5 font-bold ${kind === "tina" ? "bg-tina-soft text-tina" : "bg-sauna-soft"}`}>{title}</h2>
       <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
         {SLOTS.map((s) => {
-          const free = cap - used[s];
+          const free = cap - (used[s] ?? 0);
           const isBlocked = blocked === s;
           const disabled = free < need || isBlocked || past(s);
           return (

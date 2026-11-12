@@ -10,12 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as GraficosRouteImport } from './routes/graficos'
 import { Route as MiVisitaRouteImport } from './routes/mi-visita'
 import { Route as ReservarRouteImport } from './routes/reservar'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GraficosRoute = GraficosRouteImport.update({
+  id: '/graficos',
+  path: '/graficos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MiVisitaRoute = MiVisitaRouteImport.update({
@@ -31,30 +43,38 @@ const ReservarRoute = ReservarRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/graficos': typeof GraficosRoute
   '/mi-visita': typeof MiVisitaRoute
   '/reservar': typeof ReservarRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/graficos': typeof GraficosRoute
   '/mi-visita': typeof MiVisitaRoute
   '/reservar': typeof ReservarRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/graficos': typeof GraficosRoute
   '/mi-visita': typeof MiVisitaRoute
   '/reservar': typeof ReservarRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/mi-visita' | '/reservar'
+  fullPaths: '/' | '/admin' | '/graficos' | '/mi-visita' | '/reservar'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/mi-visita' | '/reservar'
-  id: '__root__' | '/' | '/mi-visita' | '/reservar'
+  to: '/' | '/admin' | '/graficos' | '/mi-visita' | '/reservar'
+  id: '__root__' | '/' | '/admin' | '/graficos' | '/mi-visita' | '/reservar'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  GraficosRoute: typeof GraficosRoute
   MiVisitaRoute: typeof MiVisitaRoute
   ReservarRoute: typeof ReservarRoute
 }
@@ -66,6 +86,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/graficos': {
+      id: '/graficos'
+      path: '/graficos'
+      fullPath: '/graficos'
+      preLoaderRoute: typeof GraficosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mi-visita': {
@@ -87,6 +121,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  GraficosRoute: GraficosRoute,
   MiVisitaRoute: MiVisitaRoute,
   ReservarRoute: ReservarRoute,
 }
