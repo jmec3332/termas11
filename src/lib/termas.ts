@@ -19,7 +19,7 @@ export const DEFAULT_PRICES: Prices = {
 };
 export const TINAS_TOTAL = 12;
 export const SAUNAS_TOTAL = 5;
-export const SLOTS = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
+export const SLOTS = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
 export const DEFAULT_PASSWORD = "termas2026";
 
 export interface Reservation {
