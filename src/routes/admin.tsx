@@ -66,7 +66,7 @@ function Admin() {
       <Box title="Precios por persona">
         <div className="space-y-2">
           {PACKAGES.map((p) => (
-            <div key={p.id} className="grid grid-cols-[1fr_auto_auto] items-end gap-2 sm:grid-cols-[1fr_8rem_8rem_auto]">
+            <div key={p.id} className="grid grid-cols-[1fr_1fr_auto] items-end gap-2 sm:grid-cols-[1fr_8rem_8rem_auto]">
               <span className="col-span-3 text-sm font-bold sm:col-span-1 sm:self-center">{p.name}</span>
               {(["baja", "alta"] as Season[]).map((x) => (
                 <div key={x} className="space-y-0.5"><Label className="text-xs capitalize">{x}</Label>

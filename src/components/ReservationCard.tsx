@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { PACKAGES, clp, icsFor, type Reservation } from "@/lib/termas";
 
 export function fmtDate(iso: string) {
-  return new Date(iso + "T12:00:00").toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  const t = new Date(iso + "T12:00:00").toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  return t.charAt(0).toUpperCase() + t.slice(1);
 }
 
 function download(name: string, content: Blob) {
@@ -37,7 +38,7 @@ export function ReservationCard({ r, actions = true }: { r: Reservation; actions
       <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
         <dt className="text-muted-foreground">Nombre</dt><dd>{r.name}</dd>
         <dt className="text-muted-foreground">Paquete</dt><dd>{pkg.name}</dd>
-        <dt className="text-muted-foreground">Fecha</dt><dd className="capitalize">{fmtDate(r.date)}</dd>
+        <dt className="text-muted-foreground">Fecha</dt><dd>{fmtDate(r.date)}</dd>
         <dt className="text-muted-foreground">Grupo</dt><dd>{r.adults} persona/s{r.kids ? ` + ${r.kids} menor/es de 4` : ""}</dd>
         {r.tinaSlot && <><dt className="text-muted-foreground">Tina</dt><dd><span className="rounded bg-tina-soft px-1.5 font-bold text-tina">{r.tinaSlot}</span> · {r.tinaUnits} tina/s</dd></>}
         {r.saunaSlot && <><dt className="text-muted-foreground">Sauna</dt><dd><span className="rounded bg-sauna-soft px-1.5 font-bold text-foreground">{r.saunaSlot}</span> · {r.saunaUnits} sauna/s</dd></>}
