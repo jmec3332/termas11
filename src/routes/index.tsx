@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import hero from "@/assets/termas-hero.jpg";
 import { PACKAGES, DEFAULT_PRICES, clp } from "@/lib/termas";
+import { useTermas } from "@/hooks/use-termas";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,6 +19,9 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { db } = useTermas();
+  const prices = db?.settings.prices ?? DEFAULT_PRICES;
+  const season = db?.settings.season ?? "baja";
   return (
     <main>
       <section className="relative isolate flex min-h-[70vh] items-center justify-center overflow-hidden">
@@ -37,7 +41,7 @@ function Index() {
           <div key={p.id} className="rounded-xl border border-border bg-card p-4">
             <h2 className="font-display text-lg font-bold">{p.name}</h2>
             <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
-            <p className="mt-3 text-sm">Desde <b>{clp(DEFAULT_PRICES[p.id].baja)}</b> por persona</p>
+            <p className="mt-3 text-sm"><b>{clp(prices[p.id][season])}</b> por persona · temporada {season}</p>
           </div>
         ))}
       </section>
