@@ -2,6 +2,7 @@
 export type Season = "baja" | "alta";
 export type PackageId = "piscinas" | "tina" | "sauna" | "completo";
 export type Status = "confirmada" | "cancelada";
+export type Attendance = "llegado" | "ausente";
 
 export interface Pkg { id: PackageId; name: string; desc: string; tina: boolean; sauna: boolean }
 export const PACKAGES: Pkg[] = [
@@ -27,6 +28,7 @@ export interface Reservation {
   adults: number; kids: number; name: string; phone: string; email: string;
   tinaSlot: string | null; saunaSlot: string | null; tinaUnits: number; saunaUnits: number;
   season: Season; total: number; status: Status; cancelledAt: string | null; demo: boolean;
+  attendance?: Attendance | null;
 }
 export interface Settings { season: Season; prices: Prices; password: string; outTinas: number; outSaunas: number }
 export interface DB { settings: Settings; reservations: Reservation[] }

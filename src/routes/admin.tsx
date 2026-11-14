@@ -42,6 +42,13 @@ function Admin() {
   const byPhone = phone.length >= 9 ? db.reservations.filter((r) => r.phone === normalizePhone(phone)).sort((a, b) => b.date.localeCompare(a.date)) : [];
   const demoCount = db.reservations.filter((r) => r.demo).length;
   const setS = (patch: Partial<typeof s>) => update((d) => ({ ...d, settings: { ...d.settings, ...patch } }));
+  const markAttendance = (id: string, value: "llegado" | "ausente") =>
+    update((d) => ({
+      ...d,
+      reservations: d.reservations.map((r) => (r.id === id ? { ...r, attendance: value } : r)),
+    }));
+  const arrived = dayRes.filter((r) => r.attendance === "llegado").length;
+  const absent = dayRes.filter((r) => r.attendance === "ausente").length;
 
   return (
     <main className="mx-auto max-w-6xl space-y-6 px-4 py-6">
@@ -101,6 +108,33 @@ function Admin() {
         )}
       </Box>
 
+      <Box title="Asistencia del día">
+        <p className="mb-3 text-sm text-muted-foreground">
+          {dayRes.length} reservas confirmadas · <b className="text-tina">{arrived} llegaron</b> · <b className="text-destructive">{absent} no vinieron</b>
+        </p>
+        {dayRes.length === 0 && <p className="text-sm text-muted-foreground">Sin reservas para ese día.</p>}
+        <div className="space-y-2">
+          {dayRes.map((r) => (
+            <div key={r.id} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border p-2 text-sm">
+              <span>
+                <b>{r.code}</b> · {r.name} · +56 {r.phone}
+                <span className="ml-2 text-muted-foreground">
+                  {[r.tinaSlot && `Tina ${r.tinaSlot}`, r.saunaSlot && `Sauna ${r.saunaSlot}`].filter(Boolean).join(" · ") || "Solo piscinas"}
+                </span>
+              </span>
+              <span className="flex items-center gap-2">
+                {r.attendance && (
+                  <span className={r.attendance === "llegado" ? "font-bold text-tina" : "font-bold text-destructive"}>
+                    {r.attendance === "llegado" ? "Llegó" : "No vino"}
+                  </span>
+                )}
+                <Button size="sm" variant={r.attendance === "llegado" ? "default" : "outline"} onClick={() => markAttendance(r.id, "llegado")}>Llegó</Button>
+                <Button size="sm" variant={r.attendance === "ausente" ? "destructive" : "outline"} onClick={() => markAttendance(r.id, "ausente")}>No vino</Button>
+              </span>
+            </div>
+          ))}
+        </div>
+      </Box>
       <Box title="Consulta por celular">
         <Input inputMode="numeric" placeholder="9 1234 5678" value={phone} onChange={(e) => setPhone(e.target.value)} />
         <div className="mt-3 space-y-4">
